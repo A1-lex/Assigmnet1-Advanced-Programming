@@ -12,7 +12,6 @@ public class DepositTransaction extends BaseTransaction {
 
     /**
      * Constructs a DepositTransaction with a specified amount and date.
-     *
      * @param amount The deposit amount (must be positive).
      * @param date   The transaction date (must not be null).
      * @throws IllegalArgumentException if the amount is negative or the date is null.
@@ -29,7 +28,6 @@ public class DepositTransaction extends BaseTransaction {
 
     /**
      * Validates the deposit amount.
-     *
      * @param amt The deposit amount to validate.
      * @return true if the amount is greater than 0, false otherwise.
      */
@@ -51,7 +49,6 @@ public class DepositTransaction extends BaseTransaction {
 
     /**
      * Applies the deposit transaction to the specified bank account.
-     *
      * @param bankAccount The bank account to update.
      * @throws IllegalArgumentException if the deposit amount is invalid.
      */
