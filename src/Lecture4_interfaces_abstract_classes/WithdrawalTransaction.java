@@ -86,16 +86,18 @@ public class WithdrawalTransaction extends BaseTransaction {
 
     /**
      * Reverses the withdrawal if it was successfully applied.
+     * @param bankAccount The bank account to update.
+     * @return true if the reversal was successful, false otherwise.
      */
-
-        public boolean reverse(BankAccount ba) {
-        if (isApplied) {  // Only reverse if the withdrawal was applied
-            ba.setBalance(ba.getBalance() + getAmount());  // Add the withdrawn amount back to the balance
-            System.out.println("Withdrawal of " + getAmount() + " reversed. New Balance: " + ba.getBalance());
-            return true;  // Reversal successful
+    public boolean reverse(BankAccount bankAccount) {
+        if (isApplied) {
+            bankAccount.setBalance(bankAccount.getBalance() + getAmount());
+            System.out.println("Withdrawal of " + getAmount() + " reversed. New Balance: " + bankAccount.getBalance());
+            isApplied = false;  // Reset the applied flag
+            return true;
         } else {
-            System.out.println("No successful withdrawal to reverse.");
-            return false;  // No reversal
+            System.out.println("No withdrawal to reverse.");
+            return false;
         }
     }
 }
