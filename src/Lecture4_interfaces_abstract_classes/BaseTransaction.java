@@ -16,7 +16,6 @@ public abstract class BaseTransaction implements TransactionInterface {
     /**
      * Constructor for BaseTransaction.
      * Initializes the transaction with a specified amount and date, and generates a unique ID.
-     *
      * @param amount - The transaction amount (must be positive).
      * @param date - The transaction date (must be a valid Calendar object).
      * @throws IllegalArgumentException if the amount is negative or date is null.
@@ -38,7 +37,6 @@ public abstract class BaseTransaction implements TransactionInterface {
 
     /**
      * Retrieves the transaction amount.
-     * 
      * @return The transaction amount.
      */
     public double getAmount() {
@@ -47,7 +45,6 @@ public abstract class BaseTransaction implements TransactionInterface {
 
     /**
      * Retrieves a defensive copy of the transaction date.
-     *
      * @return A cloned Calendar instance of the transaction date.
      */
     public Calendar getDate() {
@@ -56,7 +53,6 @@ public abstract class BaseTransaction implements TransactionInterface {
 
     /**
      * Retrieves the unique transaction ID.
-     *
      * @return The transaction ID.
      */
     public String getTransactionID() {
@@ -72,7 +68,6 @@ public abstract class BaseTransaction implements TransactionInterface {
     /**
      * Abstract method to apply the transaction to a bank account.
      * Subclasses define specific behavior for the transaction.
-     *
      * @param ba - The BankAccount object to apply the transaction to.
      * @throws InsufficientFundsException if there are not enough funds.
      */
