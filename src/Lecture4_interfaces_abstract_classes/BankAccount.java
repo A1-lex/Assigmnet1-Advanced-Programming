@@ -12,7 +12,6 @@ public class BankAccount {
     /**
      * Constructor for BankAccount.
      * Initializes the account with a non-negative initial balance.
-     *
      * @param balance - The initial balance (must be non-negative).
      * @throws IllegalArgumentException if the balance is negative.
      */
@@ -36,7 +35,6 @@ public class BankAccount {
 
     /**
      * Sets a new balance for the account.
-     *
      * @param balance - The new balance (must be non-negative).
      * @throws IllegalArgumentException if the new balance is negative.
      */
