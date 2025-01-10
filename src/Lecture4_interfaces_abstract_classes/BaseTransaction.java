@@ -53,7 +53,6 @@ public abstract class BaseTransaction implements TransactionInterface {
 
     /**
      * Retrieves the unique transaction ID.
-     * @return The transaction ID.
      */
     public String getTransactionID() {
         return transactionID;
