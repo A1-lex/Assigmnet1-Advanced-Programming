@@ -8,7 +8,7 @@ import java.util.Calendar;
  * Core Operations:
      Retrieve transaction amount, date, and unique identifier.
  */
-public interface TransactionInterface {
+public interface TransactionInterface{
 
     /**
      * Returns the monetary amount for the transaction.
