@@ -10,7 +10,7 @@ public class BankAccount {
     private double balance;
 
     /**
-     * Constructor for BankAccount.
+     * Constructor for BankAccount
      * Initializes the account with a non-negative initial balance
      * @param balance - The initial balance (must be non-negative).
      * @throws IllegalArgumentException if the balance is negative.
