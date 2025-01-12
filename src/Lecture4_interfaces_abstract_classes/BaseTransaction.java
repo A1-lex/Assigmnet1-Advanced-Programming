@@ -1,74 +1,43 @@
 package Lecture4_interfaces_abstract_classes;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
+import java.util.UUID;
 
-/**
- * BaseTransaction Class
- * Represents an abstract base class for financial transactions.
- * Implements TransactionInterface to handle basic transaction details like amount, date, and ID.
- */
 public abstract class BaseTransaction implements TransactionInterface {
-    private final int amount;
-    private final Calendar date;
-    private final String transactionID;
+    private double amount; // The transaction amount
+    private Calendar date; // The transaction date
+    private String transactionID; // The unique identifier for the transaction
 
-    /**
-     * Constructor for BaseTransaction.
-     * Initializes the transaction with a specified amount and date, and generates a unique ID.
-     * @param amount - The transaction amount (must be positive).
-     * @param date - The transaction date (must be a valid Calendar object).
-     * @throws IllegalArgumentException if the amount is negative or date is null.
-     */
-    public BaseTransaction(int amount, @NotNull Calendar date) {
-        if (amount < 0 || date == null) {
-            throw new IllegalArgumentException("Invalid amount or date.");
-        }
+    // Constructor to initialize the Transaction object
+    public BaseTransaction(double amount, Calendar date) {
         this.amount = amount;
-        this.date = (Calendar) date.clone();
-        
-        // Generate unique transaction ID using the timestamp and a random number
-        String baseID = String.valueOf(date.getTimeInMillis());
-        // Ensure the ID is long enough (8 digits) by padding with leading zeros if necessary
-        baseID = String.format("%-8s", baseID).replace(' ', '0'); // Ensure 8 digits
-        int uniq = (int) (Math.random() * 10000);
-        transactionID = baseID.substring(0, 8) + "-" + uniq;
+        this.date = date;
+        this.transactionID = generateTransactionID();
     }
 
-    /**
-     * Retrieves the transaction amount.
-     * @return The transaction amount.
-     */
+    // Method to get the transaction amount
+    @Override
     public double getAmount() {
         return amount;
     }
 
-    /**
-     * Retrieves a defensive copy of the transaction date.
-     * @return A cloned Calendar instance of the transaction date.
-     */
+    // Method to get the transaction date
+    @Override
     public Calendar getDate() {
-        return (Calendar) date.clone();
+        return date;
     }
 
-    /**
-     * Retrieves the unique transaction ID.
-     */
+    // Method to get a unique identifier for the transaction
+    @Override
     public String getTransactionID() {
         return transactionID;
     }
 
-    /**
-     * Abstract method to print transaction details.
-     * To be implemented by subclasses to provide specific details.
-     */
-    public abstract void printTransactionDetails();
+    // Abstract method to apply the transaction to a BankAccount
+    public abstract void apply(BankAccount account);
 
-    /**
-     * Abstract method to apply the transaction to a bank account.
-     * Subclasses define specific behavior for the transaction.
-     * @param ba - The BankAccount object to apply the transaction to.
-     * @throws InsufficientFundsException if there are not enough funds.
-     */
-    public abstract void apply(BankAccount ba) throws InsufficientFundsException;
+    // Helper method to generate a unique identifier
+    private String generateTransactionID() {
+        return UUID.randomUUID().toString();
+    }
 }

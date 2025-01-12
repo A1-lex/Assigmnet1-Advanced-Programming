@@ -4,100 +4,56 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-/**
- * Represents a withdrawal transaction in the banking system.
- * Extends BaseTransaction to handle withdrawal operations.
- */
 public class WithdrawalTransaction extends BaseTransaction {
-    private boolean isApplied = false;  // Tracks if the withdrawal was successfully applied.
 
-    /**
-     * Constructs a WithdrawalTransaction with the specified amount and date.
-     * @param amount The withdrawal amount (must be positive).
-     * @param date   The transaction date (must not be null).
-     * @throws IllegalArgumentException if the amount is negative or the date is null.
-     */
-    public WithdrawalTransaction(int amount, @NotNull Calendar date) {
+    // Constructor
+    public WithdrawalTransaction(double amount, @NotNull Calendar date) {
         super(amount, date);
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Withdrawal amount must be positive.");
-        }
-        if (date == null) {
-            throw new IllegalArgumentException("Transaction date cannot be null.");
-        }
     }
 
-    /**
-     * Validates if the given amount is positive.
-     * @param amount The amount to validate.
-     * @return true if the amount is positive, false otherwise.
-     */
-    private boolean isValidAmount(double amount) {
-        return amount > 0;
+    // Check if the withdrawal amount is valid
+    private boolean isWithdrawalAmountValid(double amount) {
+        return amount > 0; // Withdrawal must be positive
     }
 
-    /**
-     * Prints the details of the withdrawal transaction.
-     */
-    @Override
+    // Print transaction details
     public void printTransactionDetails() {
         System.out.println("Withdrawal Transaction Details:");
-        System.out.println("Amount: " + getAmount());
-        System.out.println("Date: " + getDate().getTime());
         System.out.println("Transaction ID: " + getTransactionID());
+        System.out.println("Transaction Date: " + getDate().getTime());
+        System.out.println("Amount Withdrawn: " + getAmount());
     }
 
-    /**
-     * Applies the withdrawal to the specified bank account, deducting a transaction fee.
-     * @param bankAccount The bank account to update.
-     * @throws InsufficientFundsException if the account balance is insufficient.
-     */
+    // Override the apply method to process the withdrawal for a BankAccount
     @Override
-    public void apply(BankAccount bankAccount) throws InsufficientFundsException {
-        if (bankAccount == null) {
-            throw new IllegalArgumentException("Bank account cannot be null.");
+    public void apply(@NotNull BankAccount account) {
+        // Validate the withdrawal amount
+        if (!isWithdrawalAmountValid(getAmount())) {
+            throw new IllegalArgumentException("Invalid withdrawal amount. Must be greater than zero.");
         }
 
-        double currentBalance = bankAccount.getBalance();
-        double transactionFee = 2.0;  // Fixed transaction fee
+        // Check if there are sufficient funds in the account
+        double currentBalance = account.getBalance();
+        if (currentBalance >= getAmount()) {
+            // Deduct the amount from the balance
+            double newBalance = currentBalance - getAmount();
+            account.setBalance(newBalance);
 
-        if (currentBalance >= getAmount() + transactionFee) {
-            bankAccount.setBalance(currentBalance - getAmount() - transactionFee);
-            isApplied = true;
-            System.out.println("Withdrawal of " + getAmount() + " applied. Fee: " + transactionFee + ". New Balance: " + bankAccount.getBalance());
+            // Print success message
+            System.out.println("Withdrawal of " + getAmount() + " applied successfully. New balance: " + newBalance);
         } else {
-            throw new InsufficientFundsException("Insufficient funds for withdrawal and fee.");
+            // Insufficient funds
+            throw new IllegalStateException("Insufficient funds for withdrawal.");
         }
     }
 
-    /**
-     * Attempts to apply the withdrawal with exception handling.
-     * @param bankAccount The bank account to update.
-     */
-    public void applyWithExceptionHandling(BankAccount bankAccount) {
-        try {
-            apply(bankAccount);
-        } catch (InsufficientFundsException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            System.out.println("Withdrawal application attempt completed.");
-        }
-    }
+    // Method to reverse the withdrawal
+    public void reverse(@NotNull BankAccount account) {
+        // Add the withdrawn amount back to the account balance
+        double newBalance = account.getBalance() + getAmount();
+        account.setBalance(newBalance);
 
-    /**
-     * Reverses the withdrawal if it was successfully applied.
-     * @param bankAccount The bank account to update.
-     * @return true if the reversal was successful, false otherwise.
-     */
-    public boolean reverse(BankAccount bankAccount) {
-        if (isApplied) {
-            bankAccount.setBalance(bankAccount.getBalance() + getAmount());
-            System.out.println("Withdrawal of " + getAmount() + " reversed. New Balance: " + bankAccount.getBalance());
-            isApplied = false;  // Reset the applied flag
-            return true;
-        } else {
-            System.out.println("No withdrawal to reverse.");
-            return false;
-        }
+        // Print success message
+        System.out.println("Withdrawal of " + getAmount() + " reversed successfully. New balance: " + newBalance);
     }
 }
