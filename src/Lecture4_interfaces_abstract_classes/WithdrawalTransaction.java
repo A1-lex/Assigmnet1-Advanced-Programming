@@ -5,41 +5,55 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 
 public class WithdrawalTransaction extends BaseTransaction {
-    public WithdrawalTransaction(int amount, @NotNull Calendar date) {
+
+    // Constructor
+    public WithdrawalTransaction(double amount, @NotNull Calendar date) {
         super(amount, date);
     }
 
-    private boolean checkDepositAmount(int amt) {
-        if (amt < 0) {
-            return false;
-        } else {
-            return true;
-        }
+    // Check if the withdrawal amount is valid
+    private boolean isWithdrawalAmountValid(double amount) {
+        return amount > 0; // Withdrawal must be positive
     }
 
-    // Method to reverse the transaction
-    public boolean reverse() {
-        return true;
-    } // return true if reversal was successful
-
-    // Method to print a transaction receipt or details
+    // Print transaction details
     public void printTransactionDetails() {
-        System.out.println("Deposit Trasaction: " + this.toString());
+        System.out.println("Withdrawal Transaction Details:");
+        System.out.println("Transaction ID: " + getTransactionID());
+        System.out.println("Transaction Date: " + getDate().getTime());
+        System.out.println("Amount Withdrawn: " + getAmount());
     }
 
-    /*
-    Oportunity for assignment: implementing different form of withdrawal
-     */
-    public void apply(BankAccount ba) {
-        double curr_balance = ba.getBalance();
-        if (curr_balance > getAmount()) {
-            double new_balance = curr_balance - getAmount();
-            ba.setBalance(new_balance);
+    // Override the apply method to process the withdrawal for a BankAccount
+    @Override
+    public void apply(@NotNull BankAccount account) {
+        // Validate the withdrawal amount
+        if (!isWithdrawalAmountValid(getAmount())) {
+            throw new IllegalArgumentException("Invalid withdrawal amount. Must be greater than zero.");
+        }
+
+        // Check if there are sufficient funds in the account
+        double currentBalance = account.getBalance();
+        if (currentBalance >= getAmount()) {
+            // Deduct the amount from the balance
+            double newBalance = currentBalance - getAmount();
+            account.setBalance(newBalance);
+
+            // Print success message
+            System.out.println("Withdrawal of " + getAmount() + " applied successfully. New balance: " + newBalance);
+        } else {
+            // Insufficient funds
+            throw new IllegalStateException("Insufficient funds for withdrawal.");
         }
     }
 
-    /*
-    Assignment 1 Q3: Write the Reverse method - a method unique to the WithdrawalTransaction Class
-     */
-}
+    // Method to reverse the withdrawal
+    public void reverse(@NotNull BankAccount account) {
+        // Add the withdrawn amount back to the account balance
+        double newBalance = account.getBalance() + getAmount();
+        account.setBalance(newBalance);
 
+        // Print success message
+        System.out.println("Withdrawal of " + getAmount() + " reversed successfully. New balance: " + newBalance);
+    }
+}
